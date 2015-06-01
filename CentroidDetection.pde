@@ -15,6 +15,7 @@ public class CentroidDetection{
      for(int i = 0; i < bd.getBlobsNumber(); i++) {
        println("BLOB " + (i+1) + "centroid coord :"  + bd.getCentroidX(i) + " - " +  + bd.getCentroidY(i));
      }
+     Array
    }
    
    private PImage arrayToPImage(Array tab){

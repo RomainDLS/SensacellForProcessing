@@ -47,7 +47,6 @@
               textSize(8);
               text(i+"."+j,i*20,j*20+14);*/
          }
-       if(frameCount==20){
          CD.CentroidColoring(tab, 0X00FF00);
-       }
+       
     }
