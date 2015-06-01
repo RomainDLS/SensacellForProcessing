@@ -131,8 +131,12 @@ public class Array {
   }
   
   public void setColor(int x, int y, int colorValue){
-    cell[x][y].setColorValue(colorValue);
-    UpdateModule(cell[x][y].getModuleAddress());
+    if(x >= 0 && x <= width && y >= 0 && y < height){
+      cell[x][y].setColorValue(colorValue);
+      UpdateModule(cell[x][y].getModuleAddress());
+    }
+    else
+      println("ArrayIndexOutOfBoundsException -> x = "+x+" y = "+y);
   }
 
   public int getHeight() {

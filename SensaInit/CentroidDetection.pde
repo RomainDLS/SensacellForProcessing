@@ -16,7 +16,6 @@ public class CentroidDetection{
      coordList = new coord[bd.getBlobsNumber()];
      for(int i = 0; i < bd.getBlobsNumber(); i++) {
        coordList[i] = new coord(Math.round(bd.getCentroidX(i)), Math.round((int)bd.getCentroidY(i)));
-       //println("BLOB " + (i+1) + " centroid coord :"  + bd.getCentroidX(i) + " - " +  + bd.getCentroidY(i));
      }
      
      return coordList;
