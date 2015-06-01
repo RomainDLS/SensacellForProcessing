@@ -5,7 +5,7 @@
 
     public void setup() {
       int sIndex = 0;
-      frameRate(15);
+      frameRate(13);
     
        for(int i=0;i<Serial.list().length;i++){
           if(Serial.list()[i]!=null)
@@ -21,8 +21,8 @@
     }
     
     public void draw() {
+      background(255);
       Array tab;
-      background(0xFFFFFF);
       draw.Update();
       tab = draw.getArray();
       int hexaColor, r, g, b;
@@ -33,20 +33,20 @@
               g = (hexaColor & 0xFF00) >> 8;
               b = (hexaColor & 0xFF);
               noStroke();
-              if(tab.getSensorValue(i,j)==0){
-                fill(0x000000);
+              fill(255,255,255);
+              if(tab.getSensorValue(i,j)!=0){
+                fill(0,0,0);
               }
-              else{
-                fill(0xFFFFFF);
-                tab.setColor(i,j,0xFFFFFF);
-              }
-              //fill(r,g,b);
-              rect(i*20,j*20,20,20);
+              ellipse(i*20+10,j*20+10,20,20);
               draw.setArray(tab);
           /*    fill(0);
               textSize(8);
               text(i+"."+j,i*20,j*20+14);*/
          }
-         CD.CentroidColoring(tab, 0X00FF00);
-       
-    }
+         coord coordList[] = CD.getCentroids(tab);
+         for(coord coords : coordList){
+           fill(0,255,0);
+           ellipse(coords.getX()*20+10,coords.getY()*20+10,20,20);
+           println(frameRate + " " + coords.getX() + " " + coords.getY() + " " + coordList.length);
+         }
+      }

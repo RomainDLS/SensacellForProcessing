@@ -18,7 +18,6 @@ public class Drawing{
     tab.sensorListenning();
   }
   
-  
   public Array getArray(){
     return tab;
   }

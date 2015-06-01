@@ -7,15 +7,19 @@ public class CentroidDetection{
      this.bd = bd;
    }
    
-   public void CentroidColoring(Array tab, int Color){
+   public coord[] getCentroids(Array tab){
+     coord coordList[];
      PImage img = arrayToPImage(tab);
      bd.imageFindBlobs(img);
      bd.loadBlobsFeatures();
      bd.findCentroids();
+     coordList = new coord[bd.getBlobsNumber()];
      for(int i = 0; i < bd.getBlobsNumber(); i++) {
-       println("BLOB " + (i+1) + "centroid coord :"  + bd.getCentroidX(i) + " - " +  + bd.getCentroidY(i));
+       coordList[i] = new coord(Math.round(bd.getCentroidX(i)), Math.round((int)bd.getCentroidY(i)));
+       //println("BLOB " + (i+1) + " centroid coord :"  + bd.getCentroidX(i) + " - " +  + bd.getCentroidY(i));
      }
-     Array
+     
+     return coordList;
    }
    
    private PImage arrayToPImage(Array tab){
@@ -35,4 +39,30 @@ public class CentroidDetection{
        return img;
    }
    
+}
+
+public class coord{
+  private int x;
+  private int y;
+ 
+  public coord(int x, int y){
+    this.x = x;
+    this.y = y;    
+  }
+  
+  public int getX(){
+    return x;
+  }
+  
+  public int getY(){
+    return y;
+  }
+  
+  public void setX(int x){
+    this.x = x;
+  }
+  
+  public void setY(int y){
+    this.y = y;
+  }
 }
