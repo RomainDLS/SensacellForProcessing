@@ -44,8 +44,6 @@
            ellipse(coords.getX()*20+10,coords.getY()*20+10,20,20);
            DrawCircle(coords.getX(),coords.getY(),3);
          }
-         
-         
       }
       
       //fill HexaColors

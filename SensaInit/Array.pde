@@ -4,25 +4,26 @@ import java.util.HashMap;
 public class Array {
   private int height;
   private int width;
+  private int nbModules;
   private Cell[][] cell;
   private HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
   Serial sensaPort;
-  
+    
   public Array(int width, int height) {
-    // TODO Auto-generated constructor stub
     this.height = height;
     this.width = width;
     cell = new Cell[width][height];
     for(int i = 0; i<width; i++)
       for(int j = 0; j<height; j++)
         cell[i][j] = new Cell(0x000000); //default color : 0x000000
+    nbModules = height*width / (4*4);
   }
   
   public void setSerial(Serial sensaPort){
     this.sensaPort = sensaPort;
   }
   
-  public void UpdateModule(int moduleAddress){
+  public void moduleDisplay(int moduleAddress){
       sensaPort.write("0101a"+String.format("%02X", moduleAddress));
       sensaPort.write(13);
       int coord = addressList.get(moduleAddress);
@@ -35,13 +36,14 @@ public class Array {
                }
   }
   
-  public void FullDisplay(){
+  public void fullDisplay(){
         sensaPort.write("0130a01");
         sensaPort.write(13);
         int couleur = 0x0F0F0F;
         int coord, i, j;
         
-        for(int z=1; z<=48; z++){
+        for(int z=1; z<=nbModules; z++){
+          println("z :" + nbModules);
           coord = addressList.get(z);
           i = coord/100;
           j = coord%100;
@@ -53,8 +55,9 @@ public class Array {
         }
   }  
   
-  public void sensorListenning(){
-        sensaPort.write("0030a01");
+  public void fullListenning(){
+        sensaPort.write("00"+String.format("%02X", nbModules)+"a01");
+        //sensaPort.write("0018a01");
         sensaPort.write(13);
         delay(50);
         String data="";
@@ -63,10 +66,9 @@ public class Array {
             if (data != null) {
               int j = 1;
               for(int i=0;i<data.length()-1;i+=4){
-                sensorActivating(data.substring(i,i+4),j);
+                setModuleSensorValue(data.substring(i,i+4),j);
                 j++;
               }
-           //   println(data+" "+data.length());
             }
             else
               println("no data");
@@ -75,7 +77,11 @@ public class Array {
           println("sensaPort not available");
   }
   
-  private void sensorActivating(String line, int moduleAddress){
+  public void moduleListenning(int moduleAddress){
+    //TO DO
+  }
+  
+  private void setModuleSensorValue(String line, int moduleAddress){
     String binaryLine[] = ((new BigInteger("1"+line, 16).toString(2)).substring(1, 17)).split("");
     int coord = addressList.get(moduleAddress);
     int i = coord/100;
@@ -89,29 +95,12 @@ public class Array {
          }
   }
   
-  public void Addressing(String fileName){
-    BufferedReader reader = createReader(fileName);
-    String line;
-    Integer coord = 0;
-    try {
-      line = reader.readLine();
-      int[] Addresses = int(split(line," "));
-      int k =0;
-      for(int i=0;i<height;i+=4)
-        for(int j=0;j<width;j+=4){
-          coord = j*100 + i;
-          addressList.put(Addresses[k],coord);
-          //println(Addresses[k] + " : " + addressList.get(Addresses[k])/100 + " " + addressList.get(Addresses[k])%100);
-          for(int x=i;x<i+4;x++)
-            for(int y=j;y<j+4;y++){
-              cell[y][x].setAddressModule(Addresses[k]);
-            }
-          k++;
-        }
-    } catch (IOException e) {
-      e.printStackTrace();
-      line = null;
-    }
+  protected void setAddress(int x, int y, int address){
+    cell[x][y].setAddressModule(address);
+  }
+  
+  public void setAddressList(HashMap<Integer,Integer> addressList){
+    this.addressList = addressList;
   }
   
   public void setSensorValue(int x, int y, int sensorValue){
@@ -131,28 +120,20 @@ public class Array {
   }
   
   public void setColor(int x, int y, int colorValue){
-    if(x >= 0 && x <= width && y >= 0 && y < height){
+    if(x >= 0 && x < width && y >= 0 && y < height){
       cell[x][y].setColorValue(colorValue);
-      UpdateModule(cell[x][y].getModuleAddress());
+      moduleDisplay(cell[x][y].getModuleAddress());
     }
-    else
-      println("ArrayIndexOutOfBoundsException -> x = "+x+" y = "+y);
+    //else
+      //println("ColorSettingOutOfBoundsException -> x = "+x+" y = "+y);
   }
 
   public int getHeight() {
     return height;
   }
 
-  public void setHeight(int height) {
-    this.height = height;
-  }
-
   public int getWidth() {
     return width;
-  }
-
-  public void setWidth(int width) {
-    this.width = width;
   }
 }
 

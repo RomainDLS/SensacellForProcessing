@@ -34,7 +34,7 @@ public class CentroidDetection{
          k++;
        }
        img.updatePixels();
-       
+
        return img;
    }
    
