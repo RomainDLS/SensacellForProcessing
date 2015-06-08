@@ -5,7 +5,7 @@
 
     public void setup() {
       int sIndex = 0;
-      frameRate(13);
+      frameRate(20);
     
        for(int i=0;i<Serial.list().length;i++){
           if(Serial.list()[i]!=null)
@@ -15,7 +15,7 @@
           }
         }
         settings = new Setting(new Serial(this,Serial.list()[0],230400));
-        size(640,480);
+        size(settings.getArray().getWidth()*20,settings.getArray().getHeight()*20);
         CD = new CentroidDetection(new Detector(this, 255));
     }
     
@@ -31,6 +31,7 @@
               fill(0xFFFFFF);
               if(tab.getSensorValue(i,j)!=0){
                 fill(0);
+                tab.setColor(i,j,0xFF0000);
               }
               ellipse(i*20+10,j*20+10,20,20);
               settings.setArray(tab);
@@ -42,8 +43,10 @@
          for(coord coords : coordList){
            fill(0x00FF00);
            ellipse(coords.getX()*20+10,coords.getY()*20+10,20,20);
-           DrawCircle(coords.getX(),coords.getY(),3);
+           //DrawCircle(coords.getX(),coords.getY(),3);
          }
+         //if(frameCount%10==0)
+         //  println("frameRate = " + frameRate);
       }
       
       //fill HexaColors

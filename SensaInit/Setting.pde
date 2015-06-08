@@ -1,20 +1,16 @@
 public class Setting{
   private Array tab;
-  //private HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
   Serial sensaPort;
   
   public Setting(Serial sensaPort){
-    tab = new Array(8*4,6*4);
-    //Addressing("Addressing.txt");
-    //Initialization("Initialization.txt");
     this.sensaPort = sensaPort;
-    tab.setSerial(sensaPort);
-    Initialization("Initialization.txt");
+    tab = autoAddressing("Config.txt");
     tab.fullDisplay();
   }
   
-  public void Initialization(String fileName){
+  public Array autoAddressing(String fileName){
     HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
+    Array tab;
     int x,y,coord,address;
     int height = 0;
     int width = 0;
@@ -27,7 +23,6 @@ public class Setting{
 
     while(sensaPort.available() > 0){
       data = sensaPort.readStringUntil(13);
-      output.print(data);
       if(data.length() == 9){
         if(data.substring(0,1).equals("0")||data.substring(0,1).equals("1")||data.substring(0,1).equals("5")){
           x=4*(Integer.parseInt(data.substring(4,6),16)-1);
@@ -41,48 +36,46 @@ public class Setting{
           coord=x*100+y;
           address=Integer.parseInt(data.substring(6,8),16);
           addressList.put(address,coord);
-          for(int i=x;i<x+4;i++)
-            for(int j=y;j<y+4;j++){
-              tab.setAddress(i,j,address);
-            }
-          //output.print(data);
         }
       }
     }
+    tab = new Array(width*4,height*4);
+    tab.setSerial(sensaPort);
     tab.setAddressList(addressList);
+    output.println(width + " " + height);
+    for(Integer mapKey : addressList.keySet()){
+      output.println(mapKey + " " + addressList.get(mapKey));
+    }
     output.flush();
     output.close();
-    println("End Of Initialization\nheight :" + height + "\t width :"+width);
+    println("End Of autoAddressing\nheight :" + height + "\t width :"+width);
+    
+    return tab;
   }
   
-  public void Addressing(String fileName){
+  public Array fileAddressing(String fileName){
     HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
     BufferedReader reader = createReader(fileName);
     String line;
-    Integer coord = 0;
-    int width = tab.getWidth();
-    int height = tab.getHeight();
+    int values[];
+    int height=0,width=0;
     try {
       line = reader.readLine();
-      int[] Addresses = int(split(line," "));
-      int k =0;
-      for(int i=0;i<height;i+=4)
-        for(int j=0;j<width;j+=4){
-          coord = j*100 + i;
-          addressList.put(Addresses[k],coord);
-          //println(Addresses[k] + " : " + addressList.get(Addresses[k])/100 + " " + addressList.get(Addresses[k])%100);
-          for(int x=i;x<i+4;x++)
-            for(int y=j;y<j+4;y++){
-              tab.setAddress(y,x,Addresses[k]);
-            }
-          k++;
-        }
+      values = int(split(line," "));
+      height=values[1];
+      width=values[0];
+      while((line = reader.readLine())!= null){
+        values = int(split(line," "));
+        addressList.put(values[0],values[1]);
+      }
     } catch (IOException e) {
       e.printStackTrace();
       line = null;
     }
-    
+    Array tab = new Array(width*4,height*4);
+    tab.setSerial(sensaPort);
     tab.setAddressList(addressList);
+    return tab;
   }
   
   public void Update(){

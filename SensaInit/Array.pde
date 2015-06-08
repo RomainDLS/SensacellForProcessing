@@ -37,13 +37,13 @@ public class Array {
   }
   
   public void fullDisplay(){
-        sensaPort.write("0130a01");
+        sensaPort.write("01"+String.format("%02X", nbModules)+"a01");
         sensaPort.write(13);
         int couleur = 0x0F0F0F;
         int coord, i, j;
         
         for(int z=1; z<=nbModules; z++){
-          println("z :" + nbModules);
+          //println("z :" + nbModules);
           coord = addressList.get(z);
           i = coord/100;
           j = coord%100;
@@ -57,7 +57,6 @@ public class Array {
   
   public void fullListenning(){
         sensaPort.write("00"+String.format("%02X", nbModules)+"a01");
-        //sensaPort.write("0018a01");
         sensaPort.write(13);
         delay(50);
         String data="";
@@ -101,6 +100,15 @@ public class Array {
   
   public void setAddressList(HashMap<Integer,Integer> addressList){
     this.addressList = addressList;
+    int x,y,address;
+    for(Integer mapKey : addressList.keySet()){
+      address = mapKey;
+      x = addressList.get(mapKey)/100;
+      y = addressList.get(mapKey)%100;
+      for(int i=x;i<x+4;i++)
+        for(int j=y;j<y+4;j++)
+          setAddress(i,j,address);
+    }
   }
   
   public void setSensorValue(int x, int y, int sensorValue){
