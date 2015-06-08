@@ -47,10 +47,10 @@ public class Array {
           coord = addressList.get(z);
           i = coord/100;
           j = coord%100;
-          for(int a=i;a<i+4;a++)
-            for(int b=j;b<j+4;b++)
+          for(int a=j;a<j+4;a++)
+            for(int b=i;b<i+4;b++)
                for(int k=2; k>=0; k--){
-                  sensaPort.write((byte)(cell[a][b].getColorValue()>>((k)*8))&0xFF); 
+                  sensaPort.write((byte)(cell[b][a].getColorValue()>>((k)*8))&0xFF); 
                }
         }
   }  
@@ -130,7 +130,7 @@ public class Array {
   public void setColor(int x, int y, int colorValue){
     if(x >= 0 && x < width && y >= 0 && y < height){
       cell[x][y].setColorValue(colorValue);
-      moduleDisplay(cell[x][y].getModuleAddress());
+      //moduleDisplay(cell[x][y].getModuleAddress());
     }
     //else
       //println("ColorSettingOutOfBoundsException -> x = "+x+" y = "+y);

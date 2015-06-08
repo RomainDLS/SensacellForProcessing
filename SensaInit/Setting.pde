@@ -1,11 +1,13 @@
 public class Setting{
   private Array tab;
   Serial sensaPort;
+  private Array previousArray;
   
   public Setting(Serial sensaPort){
     this.sensaPort = sensaPort;
-    tab = autoAddressing("Config.txt");
+    tab = fileAddressing("Config.txt");
     tab.fullDisplay();
+    previousArray = tab;
   }
   
   public Array autoAddressing(String fileName){
@@ -80,6 +82,24 @@ public class Setting{
   
   public void Update(){
     tab.fullListenning();
+    getDifferentModule(tab,previousArray);
+    previousArray = tab;
+    //previousArray.fullDisplay();
+  }
+  
+  private int[] getDifferentModule(Array tab1, Array tab2){
+    int[] modules = new int[40];
+    int k = -1;
+    
+    for(int j=0;j<tab1.getHeight();j++)
+      for(int i=0;i<tab1.getWidth();i++){
+        if(tab1.getColor(i,j) != tab2.getColor(i,j)){
+          modules[k++]=tab1.getAddress(i,j);
+          println("change");
+        }
+      }
+      
+    return modules;
   }
   
   public Array getArray(){
