@@ -5,7 +5,7 @@
 
     public void setup() {
       int sIndex = 0;
-      frameRate(20);
+      frameRate(60);
     
        for(int i=0;i<Serial.list().length;i++){
           if(Serial.list()[i]!=null)
@@ -33,7 +33,6 @@
                 tab.setColor(i,j,0xFF0000);
               }
               ellipse(i*20+10,j*20+10,20,20);
-              settings.setArray(tab);
          }
          coord coordList[] = CD.getCentroids(tab);
          for(coord coords : coordList){

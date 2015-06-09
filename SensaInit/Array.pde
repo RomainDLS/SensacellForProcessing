@@ -1,7 +1,7 @@
 import java.math.BigInteger;
 import java.util.HashMap;
 
-public class Array {
+public class Array{
   private int height;
   private int width;
   private int nbModules;
@@ -128,12 +128,8 @@ public class Array {
   }
   
   public void setColor(int x, int y, int colorValue){
-    if(x >= 0 && x < width && y >= 0 && y < height){
+    if(x >= 0 && x < width && y >= 0 && y < height)
       cell[x][y].setColorValue(colorValue);
-      //moduleDisplay(cell[x][y].getModuleAddress());
-    }
-    //else
-      //println("ColorSettingOutOfBoundsException -> x = "+x+" y = "+y);
   }
 
   public int getHeight() {

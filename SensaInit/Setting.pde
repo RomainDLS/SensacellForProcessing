@@ -6,8 +6,8 @@ public class Setting{
   public Setting(Serial sensaPort){
     this.sensaPort = sensaPort;
     tab = fileAddressing("Config.txt");
+    previousArray = colorCopy();
     tab.fullDisplay();
-    previousArray = tab;
   }
   
   public Array autoAddressing(String fileName){
@@ -82,31 +82,36 @@ public class Setting{
   
   public void Update(){
     tab.fullListenning();
-    getDifferentModule(tab,previousArray);
-    previousArray = tab;
-    //previousArray.fullDisplay();
+    for(Integer i : getDifferentModule(tab,previousArray))
+      tab.moduleDisplay(i);
+    previousArray = colorCopy();
+    
   }
   
-  private int[] getDifferentModule(Array tab1, Array tab2){
-    int[] modules = new int[40];
-    int k = -1;
+  private ArrayList<Integer> getDifferentModule(Array firstTab, Array LastTab){
+    ArrayList<Integer> addressList = new ArrayList<Integer>();
     
-    for(int j=0;j<tab1.getHeight();j++)
-      for(int i=0;i<tab1.getWidth();i++){
-        if(tab1.getColor(i,j) != tab2.getColor(i,j)){
-          modules[k++]=tab1.getAddress(i,j);
-          println("change");
+    for(int j=0;j<firstTab.getHeight();j++)
+      for(int i=0;i<firstTab.getWidth();i++){
+        if(firstTab.getColor(i,j) != LastTab.getColor(i,j)){
+          addressList.add(firstTab.getAddress(i,j));
         }
       }
       
-    return modules;
+    return addressList;
   }
   
   public Array getArray(){
     return tab;
   }
   
-  public void setArray(Array tab){
-    this.tab = tab;
+  public Array colorCopy(){
+    Array copy = new Array(this.tab.getWidth(), this.tab.getHeight());
+    for(int j=0; j<tab.getHeight(); j++)
+      for(int i=0; i<tab.getWidth(); i++){
+        copy.setColor(i,j,tab.getColor(i,j));
+      }
+    
+    return copy;
   }
 }
