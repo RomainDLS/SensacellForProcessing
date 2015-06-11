@@ -70,14 +70,28 @@ public class Array{
               }
             }
             else
-              println("no data");
+              println("no data - (fullListtenning)");
         }
         else
-          println("sensaPort not available");
+          println("sensaPort not available - (fullListtenning)");
   }
   
   public void moduleListenning(int moduleAddress){
-    //TO DO
+    sensaPort.write("0001a"+String.format("%02X", moduleAddress));
+    sensaPort.write(13);
+    delay(50);
+    String data = "";
+    if(sensaPort.available() > 0){
+      data = sensaPort.readStringUntil(13);
+      if (data != null){
+        //println(data);
+        setModuleSensorValue(data.substring(0,3),moduleAddress);
+      }
+      else
+        println("no data - (fullListtenning)");
+    }
+    else
+          println("sensaPort not available - (moduleListenning)");
   }
   
   private void setModuleSensorValue(String line, int moduleAddress){
@@ -128,8 +142,10 @@ public class Array{
   }
   
   public void setColor(int x, int y, int colorValue){
-    if(x >= 0 && x < width && y >= 0 && y < height)
+    if(x >= 0 && x < width && y >= 0 && y < height){
       cell[x][y].setColorValue(colorValue);
+      //moduleDisplay(cell[x][y].getModuleAddress());
+    }
   }
 
   public int getHeight() {
