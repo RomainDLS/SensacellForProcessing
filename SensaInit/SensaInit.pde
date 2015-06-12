@@ -15,6 +15,7 @@
           }
         }
         settings = new Setting(new Serial(this,Serial.list()[0],230400));
+        settings.getArray().setProportionnalMode();
         size(settings.getArray().getWidth()*20,settings.getArray().getHeight()*20);
         CD = new CentroidDetection(new Detector(this, 255));
     }
@@ -24,14 +25,16 @@
       Array tab;
       //settings.Update();
       tab = settings.getArray();
-      tab.moduleListenning(1);
+      tab.fullListenning();
+      //tab.moduleListenning(10);
       for(int i = 0; i<tab.getWidth();i++)
         for(int j=0; j<tab.getHeight();j++){
               noStroke();
               fill(0xFFFFFF);
-              if(tab.getSensorValue(i,j)!=0){
-                fill(0);
-                tab.setColor(i,j,0xFF0000);
+              if(tab.getSensorValue(i,j)>2){
+                int touchColor = 255 - tab.getSensorValue(i,j)*17;
+                fill(touchColor,touchColor,touchColor);
+                tab.setColor(i,j,touchColor);
               }
               ellipse(i*20+10,j*20+10,20,20);
          }

@@ -5,7 +5,7 @@ public class Setting{
   
   public Setting(Serial sensaPort){
     this.sensaPort = sensaPort;
-    tab = fileAddressing("Config.txt");
+    tab = autoAddressing("Config.txt");
     previousArray = colorCopy();
     tab.fullDisplay();
   }
@@ -105,7 +105,7 @@ public class Setting{
     return tab;
   }
   
-  public Array colorCopy(){
+  private Array colorCopy(){
     Array copy = new Array(this.tab.getWidth(), this.tab.getHeight());
     for(int j=0; j<tab.getHeight(); j++)
       for(int i=0; i<tab.getWidth(); i++){
