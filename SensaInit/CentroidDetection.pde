@@ -7,7 +7,7 @@ public class CentroidDetection{
      this.bd = bd;
    }
    
-   public coord[] getCentroids(Array tab){
+   public coord[] getCentroids(Sensacell tab){
      coord coordList[];
      PImage img = arrayToPImage(tab);
      bd.imageFindBlobs(img);
@@ -21,13 +21,13 @@ public class CentroidDetection{
      return coordList;
    }
    
-   private PImage arrayToPImage(Array tab){
+   private PImage arrayToPImage(Sensacell tab){
      PImage img = createImage(tab.width, tab.height, RGB);
      img.loadPixels();
      int k=0;  
      for(int i=0;i<tab.height;i++)
        for(int j=0;j<tab.width;j++){
-         if(tab.getSensorValue(j,i)!=0)
+         if(tab.getSensorValue(j,i)>2)
              img.pixels[k]=0xFFFFFF;
          else
              img.pixels[k]=0x000000;

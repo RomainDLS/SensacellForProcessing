@@ -1,7 +1,7 @@
 import java.math.BigInteger;
 import java.util.HashMap;
 
-public class Array{
+public class Sensacell{
   private int height;
   private int width;
   private int nbModules;
@@ -9,16 +9,95 @@ public class Array{
   private HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
   Serial sensaPort;
   private boolean proportionnalMode;
+  private Cell[][] previous;  
+  
+  public Sensacell(Serial sensaPort){
+      this.sensaPort = sensaPort;
+    //default value :
+    // BinaryMode
+    sensaPort.write("0B00a00");
+    sensaPort.write(13);
+    delay(50);
+    proportionnalMode = false;
+  }
+  
+  public void autoAddressing(String fileName){
+    HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
+    int x,y,coord,address;
+    int height = 0;
+    int width = 0;
+    PrintWriter output = createWriter(fileName); 
+    String data = "";
     
-  public Array(int width, int height) {
+    sensaPort.write("13EAa00");
+    sensaPort.write(13);
+    delay(8000);
+
+    while(sensaPort.available() > 0){
+      data = sensaPort.readStringUntil(13);
+      if(data.length() == 9){
+        if(data.substring(0,1).equals("0")||data.substring(0,1).equals("1")||data.substring(0,1).equals("5")){
+          x=4*(Integer.parseInt(data.substring(4,6),16)-1);
+          y=4*(Integer.parseInt(data.substring(2,4),16)-1);
+          if(x/4>width){
+            width = x/4 + 1;
+          }
+          if(y/4>height){
+            height = y/4 + 1;
+          }
+          coord=x*100+y;
+          address=Integer.parseInt(data.substring(6,8),16);
+          addressList.put(address,coord);
+        }
+      }
+    }
+    sizeSetting(width*4,height*4);
+    setAddressList(addressList);
+    output.println(width + " " + height);
+    for(Integer mapKey : addressList.keySet()){
+      output.println(mapKey + " " + addressList.get(mapKey));
+    }
+    output.flush();
+    output.close();
+    println("End Of autoAddressing\nheight :" + height + "\t width :"+width);
+  }
+  
+  public void fileAddressing(String fileName){
+    HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
+    BufferedReader reader = createReader(fileName);
+    String line;
+    int values[];
+    int height=0,width=0;
+    try {
+      line = reader.readLine();
+      values = int(split(line," "));
+      height=values[1];
+      width=values[0];
+      while((line = reader.readLine())!= null){
+        values = int(split(line," "));
+        addressList.put(values[0],values[1]);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      line = null;
+    }
+    
+    sizeSetting(width*4,height*4);
+    setAddressList(addressList);
+  }
+    
+  private void sizeSetting(int width, int height) {
     this.height = height;
     this.width = width;
     cell = new Cell[width][height];
     for(int i = 0; i<width; i++)
       for(int j = 0; j<height; j++)
         cell[i][j] = new Cell(0x000000); //default color : 0x000000
+    previous = new Cell[width][height];
+    for(int i = 0; i<width; i++)
+      for(int j = 0; j<height; j++)
+        previous[i][j] = new Cell(0x000000);
     nbModules = height*width / (4*4);
-    proportionnalMode = false;
   }
   
   public void setSerial(Serial sensaPort){
@@ -115,21 +194,40 @@ public class Array{
   }
   
   public void moduleListenning(int moduleAddress){
-    sensaPort.write("r"+String.format("%02X", moduleAddress));
-    sensaPort.write(13);
-    delay(50);
-    String data = "";
-    if(sensaPort.available() > 0){
-      data = sensaPort.readStringUntil(13);
-      if (data != null){
-        //println(data);
-        setModuleSensorValue(data.substring(0,4),moduleAddress);
+    if(!proportionnalMode){
+      sensaPort.write("r"+String.format("%02X", moduleAddress));
+      sensaPort.write(13);
+      delay(50);
+      String data = "";
+      if(sensaPort.available() > 0){
+        data = sensaPort.readStringUntil(13);
+        if (data != null){
+          //println(data);
+          setModuleSensorValue(data.substring(0,4),moduleAddress);
+        }
+        else
+          println("no data - (fullListtenning)");
       }
       else
-        println("no data - (fullListtenning)");
+            println("sensaPort not available - (moduleListenning)");
     }
-    else
-          println("sensaPort not available - (moduleListenning)");
+    else{
+      sensaPort.write("p"+String.format("%02X", moduleAddress));
+      sensaPort.write(13);
+      delay(50);
+      String data = "";
+      int k=0;
+      int coord = addressList.get(moduleAddress);
+      int i = coord/100;
+      int j = coord%100;
+      if(sensaPort.available() > 0)
+              data = sensaPort.readStringUntil(13);
+      for(int b=j;b<j+4;b++)
+        for(int a=i;a<i+4;a++){
+            cell[a][b].setSensorValue(Integer.parseInt(data.substring(k,k+1), 16));
+            k++;
+        }
+    }
   }
   
   private void setModuleSensorValue(String line, int moduleAddress){
@@ -150,7 +248,7 @@ public class Array{
     cell[x][y].setAddressModule(address);
   }
   
-  public void setAddressList(HashMap<Integer,Integer> addressList){
+  private void setAddressList(HashMap<Integer,Integer> addressList){
     this.addressList = addressList;
     int x,y,address;
     for(Integer mapKey : addressList.keySet()){
@@ -163,7 +261,7 @@ public class Array{
     }
   }
   
-  public void setSensorValue(int x, int y, int sensorValue){
+  private void setSensorValue(int x, int y, int sensorValue){
     cell[x][y].setSensorValue(sensorValue);
   }
     
@@ -192,6 +290,33 @@ public class Array{
 
   public int getWidth() {
     return width;
+  }
+  
+  
+  public void Update(){
+    fullListenning();
+    for(Integer i : getDifferentModule(cell,previous))
+      tab.moduleDisplay(i);
+    colorCopy();
+  }
+  
+  private void colorCopy(){
+    for(int j=0; j<tab.getHeight(); j++)
+      for(int i=0; i<tab.getWidth(); i++)
+        previous[i][j].setColorValue(cell[i][j].getColorValue());
+  }
+  
+  private ArrayList<Integer> getDifferentModule(Cell[][] cell, Cell[][] previous){
+    ArrayList<Integer> addressList = new ArrayList<Integer>();
+    
+    for(int j=0;j<height;j++)
+      for(int i=0;i<width;i++){
+        if(cell[i][j].getColorValue() != previous[i][j].getColorValue()){
+          addressList.add(cell[i][j].getModuleAddress());
+        }
+      }
+      
+    return addressList;
   }
 }
 
