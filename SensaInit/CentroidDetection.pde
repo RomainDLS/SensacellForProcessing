@@ -27,7 +27,7 @@ public class CentroidDetection{
      int k=0;  
      for(int i=0;i<tab.height;i++)
        for(int j=0;j<tab.width;j++){
-         if(tab.getSensorValue(j,i)>2)
+         if(tab.getSensorValue(j,i)>4)
              img.pixels[k]=0xFFFFFF;
          else
              img.pixels[k]=0x000000;

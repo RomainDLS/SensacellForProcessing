@@ -155,7 +155,7 @@ public class Sensacell{
         }
   }
   
-  public void fullListenning(){
+  public void fullListening(){
         sensaPort.write("00"+String.format("%02X", nbModules)+"a01");
         sensaPort.write(13);
         delay(50);
@@ -193,7 +193,7 @@ public class Sensacell{
         }
   }
   
-  public void moduleListenning(int moduleAddress){
+  public void moduleListening(int moduleAddress){
     if(!proportionnalMode){
       sensaPort.write("r"+String.format("%02X", moduleAddress));
       sensaPort.write(13);
@@ -209,7 +209,7 @@ public class Sensacell{
           println("no data - (fullListtenning)");
       }
       else
-            println("sensaPort not available - (moduleListenning)");
+            println("sensaPort not available - (moduleListening)");
     }
     else{
       sensaPort.write("p"+String.format("%02X", moduleAddress));
@@ -294,7 +294,7 @@ public class Sensacell{
   
   
   public void Update(){
-    fullListenning();
+    fullListening();
     for(Integer i : getDifferentModule(cell,previous))
       tab.moduleDisplay(i);
     colorCopy();
