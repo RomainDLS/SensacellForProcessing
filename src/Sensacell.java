@@ -15,10 +15,10 @@ public class Sensacell extends PApplet{
 	private int nbModules;
 	private Cell[][] cell;
 	private HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
-	Serial sensaPort;
+	private Serial sensaPort;
 	private boolean proportionnalMode;
 	private Cell[][] previous;  
-	PApplet parent;
+	private PApplet parent;
 
 	public Sensacell(Serial sensaPort, PApplet parent){
 		this.sensaPort = sensaPort;
@@ -33,6 +33,10 @@ public class Sensacell extends PApplet{
 		sensaPort.write(13);
 		delay(50);
 		println(sensaPort.readStringUntil(13));
+	}
+	
+	protected PApplet getPApplet(){
+		return parent;
 	}
 
 	public void autoAddressing(String fileName){

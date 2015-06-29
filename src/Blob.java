@@ -2,15 +2,17 @@ import processing.core.PImage;
 import blobscanner.*;
 
 public class Blob{
+	Sensacell tab;
 	Detector bd;
 
-	public Blob(Detector bd){
-		this.bd = bd;
+	public Blob(Sensacell tab){
+		this.tab = tab;
+		bd = new Detector(tab.getPApplet(), 255);
 	}
 
-	public coord[] getCentroids(Sensacell tab){
+	public coord[] getCentroids(){
 		coord coordList[];
-		PImage img = arrayToPImage(tab);
+		PImage img = arrayToPImage();
 		bd.imageFindBlobs(img);
 		bd.loadBlobsFeatures();
 		bd.findCentroids();
@@ -22,7 +24,7 @@ public class Blob{
 		return coordList;
 	}
 
-	private PImage arrayToPImage(Sensacell tab){
+	private PImage arrayToPImage(){
 		PImage img = new PImage(tab.getWidth(), tab.getHeight());
 		img.loadPixels();
 		int k=0;  
