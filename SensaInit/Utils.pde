@@ -1,4 +1,41 @@
-void DrawCircle(int x0, int y0, int radius, int Color){
+
+public class Utils{
+  Sensacell tab;
+  
+  
+  public Utils(Sensacell Array){
+    this.tab = Array;
+  }
+  
+  void DrawFilledCircle(int x0, int y0, int radius, int Color){
+    int x = radius;
+    int y = 0;
+    int xChange = 1 - (radius << 1);
+    int yChange = 0;
+    int radiusError = 0;
+
+    while (x >= y){
+        for (int i = x0 - x; i <= x0 + x; i++){
+            tab.setColor(i, y0 + y, Color);
+            tab.setColor(i, y0 - y, Color);
+        }
+        for (int i = x0 - y; i <= x0 + y; i++){
+            tab.setColor(i, y0 + x, Color);
+            tab.setColor(i, y0 - x, Color);
+        }
+
+        y++;
+        radiusError += yChange;
+        yChange += 2;
+        if (((radiusError << 1) + xChange) > 0){
+            x--;
+            radiusError += xChange;
+            xChange += 2;
+        }
+    }
+  }
+
+  public void DrawCircle(int x0, int y0, int radius, int Color){
     int x = radius;
     int y = 0;
     int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
@@ -22,3 +59,4 @@ void DrawCircle(int x0, int y0, int radius, int Color){
       }
     }
   }
+}

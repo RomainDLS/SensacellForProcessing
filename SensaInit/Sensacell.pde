@@ -296,13 +296,13 @@ public class Sensacell{
   public void Update(){
     fullListening();
     for(Integer i : getDifferentModule(cell,previous))
-      tab.moduleDisplay(i);
+      moduleDisplay(i);
     colorCopy();
   }
   
   private void colorCopy(){
-    for(int j=0; j<tab.getHeight(); j++)
-      for(int i=0; i<tab.getWidth(); i++)
+    for(int j=0; j<height; j++)
+      for(int i=0; i<width; i++)
         previous[i][j].setColorValue(cell[i][j].getColorValue());
   }
   
