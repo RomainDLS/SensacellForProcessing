@@ -29,10 +29,6 @@ public class Sensacell extends PApplet{
 		sensaPort.write(13);
 		delay(50);
 		proportionnalMode = false;
-		sensaPort.write("r01");
-		sensaPort.write(13);
-		delay(50);
-		println(sensaPort.readStringUntil(13));
 	}
 	
 	protected PApplet getPApplet(){

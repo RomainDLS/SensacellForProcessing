@@ -1,8 +1,7 @@
-import blobscanner.Detector;
 import processing.serial.Serial;
 import processing.core.*;
 
-public class sensaInit extends PApplet{
+public class SensaInit extends PApplet{
 	private static final long serialVersionUID = 1L;
 	Sensacell tab;
 	Blob blobs;
@@ -13,7 +12,6 @@ public class sensaInit extends PApplet{
 	}
 
 	public void setup() {
-		blobs = new Blob(new Detector(this, 255));
 		//Initializes a newly created Sensacell object connected to the only available serial
 		tab = new Sensacell(new Serial(this,Serial.list()[0],230400),this);
 		//The virtual array is initialized with the sensacell initialization protocol 
@@ -27,6 +25,7 @@ public class sensaInit extends PApplet{
 		//tab.setColor(1,2,0x13217C);
 
 		Tools = new Utils(tab);
+		blobs = new Blob(tab);
 	}
 
 	public void draw() {
@@ -44,7 +43,7 @@ public class sensaInit extends PApplet{
 				}
 				ellipse(i*20+10,j*20+10,20,20);
 			}
-		coord coordList[] = blobs.getCentroids(tab);
+		coord coordList[] = blobs.getCentroids();
 	         for(coord coords : coordList){
 	           fill(0x00FF00);
 	           ellipse(coords.getX()*20+10,coords.getY()*20+10,20,20);
