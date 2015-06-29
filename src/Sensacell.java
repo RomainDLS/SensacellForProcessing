@@ -272,7 +272,7 @@ public class Sensacell extends PApplet{
 			}
 	}
 
-	protected void setAddress(int x, int y, int address){
+	private void setAddress(int x, int y, int address){
 		cell[x][y].setAddressModule(address);
 	}
 

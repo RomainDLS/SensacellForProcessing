@@ -4,33 +4,33 @@ public class Cell {
 	private int moduleAddress;
 	private int sensorValue;
 
-	public int getModuleAddress() {
+	protected int getModuleAddress() {
 		return moduleAddress;
 	}
 
-	public void setAddressModule(int AddressModule) {
+	protected void setAddressModule(int AddressModule) {
 		this.moduleAddress = AddressModule;
 	}
 
-	public int getSensorValue() {
+	protected int getSensorValue() {
 		return sensorValue;
 	}
 
-	public void setSensorValue(int sensorValue) {
+	protected void setSensorValue(int sensorValue) {
 		this.sensorValue = sensorValue;
 	}
 
-	public Cell(int colorValue) {
+	protected Cell(int colorValue) {
 		// TODO Auto-generated constructor stub
 		this.colorValue = colorValue;
 		sensorValue = 0;
 	}
 
-	public int getColorValue() {
+	protected int getColorValue() {
 		return colorValue;
 	}
 
-	public void setColorValue(int colorValue) {
+	protected void setColorValue(int colorValue) {
 		this.colorValue = colorValue;
 	}
 }

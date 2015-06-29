@@ -2,24 +2,24 @@ public class coord{
   private int x;
   private int y;
  
-  public coord(int x, int y){
+  protected coord(int x, int y){
     this.x = x;
     this.y = y;    
   }
   
-  public int getX(){
+  protected int getX(){
     return x;
   }
   
-  public int getY(){
+  protected int getY(){
     return y;
   }
   
-  public void setX(int x){
+  protected void setX(int x){
     this.x = x;
   }
   
-  public void setY(int y){
+  protected void setY(int y){
     this.y = y;
   }
 }
