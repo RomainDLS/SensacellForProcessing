@@ -1,3 +1,5 @@
+import processing.core.PImage;
+
 
 public class Utils {
 	Sensacell tab;
@@ -131,5 +133,9 @@ public class Utils {
 	 */
 	public void fill(int hexaColor){
 		tab.getPApplet().fill((hexaColor & 0xFF0000) >> 16,(hexaColor & 0xFF00) >> 8,(hexaColor & 0xFF));
+	}
+	
+	public void loadImage(PImage img){
+		
 	}
 }
