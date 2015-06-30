@@ -30,7 +30,7 @@ public class Sensacell extends PApplet{
 		delay(50);
 		proportionnalMode = false;
 	}
-	
+
 	protected PApplet getPApplet(){
 		return parent;
 	}
@@ -319,8 +319,12 @@ public class Sensacell extends PApplet{
 
 	public void Update(){
 		fullListening();
-		for(Integer i : getDifferentModule(cell,previous))
-			moduleDisplay(i);
+		ArrayList<Integer> ChangedModule = getDifferentModule(cell,previous);
+		if(ChangedModule.size()<(nbModules/8))
+			for(Integer i : ChangedModule)
+				moduleDisplay(i);
+		else
+			fullDisplay();
 		colorCopy();
 	}
 
@@ -334,11 +338,10 @@ public class Sensacell extends PApplet{
 		ArrayList<Integer> addressList = new ArrayList<Integer>();
 
 		for(int j=0;j<height;j++)
-			for(int i=0;i<width;i++){
-				if(cell[i][j].getColorValue() != previous[i][j].getColorValue()){
-					addressList.add(cell[i][j].getModuleAddress());
-				}
-			}
+			for(int i=0;i<width;i++)
+				if(cell[i][j].getColorValue() != previous[i][j].getColorValue())
+					if(!addressList.contains(cell[i][j].getModuleAddress()))
+						addressList.add(cell[i][j].getModuleAddress());
 
 		return addressList;
 	}

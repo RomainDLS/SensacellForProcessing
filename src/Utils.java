@@ -59,4 +59,24 @@ public class Utils {
 					}
 				}
 	}
+	
+	public void DrawFilledRectangle(int x0, int y0, int width, int height, int Color){
+		for(int i=0; i<width; i++)
+			for(int j=0; j<height; j++)
+				tab.setColor( x0 + i, y0 + j, Color );
+	}
+	
+	public void DrawRectangle(int x0, int y0, int width, int height, int Color){
+		for(int i=0; i<width; i++){
+			tab.setColor(x0 + i, y0, Color);
+			tab.setColor(x0 + i, y0 + height - 1, Color);
+			if(i == x0 || i == width-1)
+				for(int j=1; j<height-1; j++)
+					tab.setColor(i, y0 + j, Color);
+		}
+	}
+	
+	public void fill(int hexaColor){
+		tab.getPApplet().fill((hexaColor & 0xFF0000) >> 16,(hexaColor & 0xFF00) >> 8,(hexaColor & 0xFF));
+	}
 }
