@@ -8,6 +8,9 @@ import java.util.HashMap;
 import processing.serial.Serial;
 import processing.core.*;
 
+/**
+ * @author Romain
+ */
 public class Sensacell extends PApplet{
 	private static final long serialVersionUID = 7145179468355755361L;
 	private int height;
@@ -20,6 +23,11 @@ public class Sensacell extends PApplet{
 	private Cell[][] previous;  
 	private PApplet parent;
 
+	/**
+	 * Initializes a newly created Sensacell object so that it represents the Sensacell array connected to the serial sensaPort.
+	 * @param sensaPort
+	 * @param parent
+	 */
 	public Sensacell(Serial sensaPort, PApplet parent){
 		this.sensaPort = sensaPort;
 		this.parent = parent;
@@ -35,6 +43,11 @@ public class Sensacell extends PApplet{
 		return parent;
 	}
 
+	/**
+	 * The virtual array is initialized with the sensacell initialization protocol and then the configuration is saved on a file named filename.
+	 * @param fileName
+	 * name of the saved file
+	 */
 	public void autoAddressing(String fileName){
 		HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
 		int x,y,coord,address;
@@ -76,6 +89,11 @@ public class Sensacell extends PApplet{
 		PApplet.println("End Of autoAddressing\nheight :" + height + "\t width :"+width);
 	}
 
+	/**
+	 * The virtual array is initialized with the file named filename.
+	 * @param fileName
+	 * name of the loaded file
+	 */
 	public void fileAddressing(String fileName){
 		HashMap<Integer,Integer> addressList = new HashMap<Integer,Integer>();
 		BufferedReader reader = createReader(fileName);
@@ -123,10 +141,20 @@ public class Sensacell extends PApplet{
 		nbModules = height*width / (4*4);
 	}
 
+	/**
+	 * Return the number of Modules of Sensacell
+	 * @return
+	 * the number of Modules of Sensacell
+	 */
 	public int getNbModules(){
 		return nbModules;
 	}
 
+	/**
+	 * Set the serial which is connected to the sensacell array.
+	 * @param sensaPort
+	 * Serial connected to sensacell
+	 */
 	public void setSerial(Serial sensaPort){
 		this.sensaPort = sensaPort;
 		//default value :
@@ -136,6 +164,9 @@ public class Sensacell extends PApplet{
 		delay(50);
 	}
 
+	/**
+	 * Set the proportional read mode on sensacell.
+	 */
 	public void setProportionnalMode(){
 		sensaPort.write("0B01a00");
 		sensaPort.write(13);
@@ -143,6 +174,9 @@ public class Sensacell extends PApplet{
 		proportionnalMode = true;
 	}
 
+	/**
+	 * Set the binary read mode on sensacell.
+	 */
 	public void setBinaryMode(){
 		sensaPort.write("0B00a00");
 		sensaPort.write(13);
@@ -150,6 +184,11 @@ public class Sensacell extends PApplet{
 		proportionnalMode = false;
 	}
 
+	/**
+	 * Display on sensacell the values contains in the module number moduleAddress.
+	 * @param moduleAddress
+	 * module number (must be <= nbModules)
+	 */
 	public void moduleDisplay(int moduleAddress){
 		sensaPort.write("0101a"+String.format("%02X", moduleAddress));
 		sensaPort.write(13);
@@ -163,6 +202,9 @@ public class Sensacell extends PApplet{
 				}
 	}
 
+	/**
+	 * Display on sensacell all the values of the virtual array.
+	 */
 	public void fullDisplay(){
 		sensaPort.write("01"+String.format("%02X", nbModules)+"a01");
 		sensaPort.write(13);
@@ -180,6 +222,9 @@ public class Sensacell extends PApplet{
 		}
 	}
 
+	/**
+	 * Set on the virtual array all the sensors values of the sensacell array.
+	 */
 	public void fullListening(){
 		sensaPort.write("00"+String.format("%02X", nbModules)+"a01");
 		sensaPort.write(13);
@@ -219,6 +264,11 @@ public class Sensacell extends PApplet{
 		}
 	}
 
+	/**
+	 * Set on the virtual array the sensors values of the module number moduleAddress.
+	 * @param moduleAddress
+	 * module number (must be <= nbModules)
+	 */
 	public void moduleListening(int moduleAddress){
 		if(!proportionnalMode){
 			sensaPort.write("r"+String.format("%02X", moduleAddress));
@@ -289,18 +339,54 @@ public class Sensacell extends PApplet{
 		}
 	}
 
+	/**
+	 * Return the address of the module which contains the cell[x][y].
+	 * @param x
+	 * x coordinate
+	 * @param y
+	 * y coordinate
+	 * @return
+	 * a number of one module
+	 */
 	public int getAddress(int x, int y){
 		return cell[x][y].getModuleAddress();
 	}
 
+	/**
+	 * Return the value of the sensor of the cell[x][y].
+	 * @param x
+	 * x coordinate
+	 * @param y
+	 * y coordinate
+	 * @return
+	 * a value of one sensor
+	 */
 	public int getSensorValue(int x, int y){
 		return cell[x][y].getSensorValue();
 	}
 
+	/**
+	 * Return the color (hexadecimal value) of the cell[x][y].
+	 * @param x
+	 * x coordinate
+	 * @param y
+	 * y coordinate
+	 * @return
+	 * a color of one cell
+	 */
 	public int getColor(int x, int y){
 		return cell[x][y].getColorValue();
 	}
 
+	/**
+	 * Set the color (hexadecimal value) of the cell[x][y].
+	 * @param x
+	 * x coordinate
+	 * @param y
+	 * y coordinate
+	 * @param colorValue
+	 * color of the cell
+	 */
 	public void setColor(int x, int y, int colorValue){
 		if(x >= 0 && x < width && y >= 0 && y < height){
 			cell[x][y].setColorValue(colorValue);
@@ -308,15 +394,30 @@ public class Sensacell extends PApplet{
 		}
 	}
 
+	/**
+	 * Return the height of the virtual array.
+	 * @return
+	 * height of sensacell
+	 */
+	@Override
 	public int getHeight() {
 		return height;
 	}
 
+	/** 
+	 * Return the width of the virtual array.
+	 * @return
+	 * width of sensacell
+	 */
+	@Override
 	public int getWidth() {
 		return width;
 	}
 
 
+	/**
+	 * Intelligent listening and displaying 
+	 */
 	public void Update(){
 		fullListening();
 		ArrayList<Integer> ChangedModule = getDifferentModule(cell,previous);

@@ -43,7 +43,7 @@ public class SensaInit extends PApplet{
 				ellipse(i*20+10,j*20+10,20,20);
 			}
 		coord coordList[] = blobs.getCentroids();
-	         for(coord coords : coordList){
+	         for(coord coords : coordList){	
 	           Tools.fill(0x00FF00);
 	           ellipse(coords.getX()*20+10,coords.getY()*20+10,20,20);
 	           Tools.DrawFilledCircle(coords.getX(),coords.getY(),1,0xFF0000);

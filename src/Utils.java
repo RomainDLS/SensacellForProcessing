@@ -3,10 +3,24 @@ public class Utils {
 	Sensacell tab;
 
 
+	/**
+	 * @param Array
+	 * sensacell
+	 */
 	public Utils(Sensacell Array){
 		tab = Array;
 	}
 
+	/**
+	 * @param x0
+	 * x coordinate
+	 * @param y0
+	 * y coordinate
+	 * @param radius
+	 * radius of the circle
+	 * @param Color
+	 * color of the circle
+	 */
 	public void DrawFilledCircle(int x0, int y0, int radius, int Color){
 		int x = radius;
 		int y = 0;
@@ -35,6 +49,16 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * @param x0
+	 * x coordinate
+	 * @param y0
+	 * y coordinate
+	 * @param radius
+	 * radius of the circle
+	 * @param Color
+	 * color of the circle
+	 */
 	public void DrawCircle(int x0, int y0, int radius, int Color){
 		int x = radius;
 		int y = 0;
@@ -60,12 +84,36 @@ public class Utils {
 				}
 	}
 	
+	/**
+	 * @param x0
+	 * x coordinate
+	 * @param y0
+	 * y coordinate
+	 * @param width
+	 * width of the rectangle
+	 * @param height
+	 * height of the rectangle
+	 * @param Color
+	 * color of the rectangle
+	 */
 	public void DrawFilledRectangle(int x0, int y0, int width, int height, int Color){
 		for(int i=0; i<width; i++)
 			for(int j=0; j<height; j++)
 				tab.setColor( x0 + i, y0 + j, Color );
 	}
 	
+	/**
+	 * @param x0
+	 * x coordinate
+	 * @param y0
+	 * y coordinate
+	 * @param width
+	 * width of the rectangle
+	 * @param height
+	 * height of the rectangle
+	 * @param Color
+	 * color of the rectangle
+	 */
 	public void DrawRectangle(int x0, int y0, int width, int height, int Color){
 		for(int i=0; i<width; i++){
 			tab.setColor(x0 + i, y0, Color);
@@ -76,6 +124,11 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * fill function with hexacolor instead of RGB
+	 * @param hexaColor
+	 * hexadecimal value
+	 */
 	public void fill(int hexaColor){
 		tab.getPApplet().fill((hexaColor & 0xFF0000) >> 16,(hexaColor & 0xFF00) >> 8,(hexaColor & 0xFF));
 	}

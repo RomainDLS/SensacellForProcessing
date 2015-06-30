@@ -5,11 +5,20 @@ public class Blob{
 	Sensacell tab;
 	Detector bd;
 
+	/**
+	 * @param tab
+	 * sensacell
+	 */
 	public Blob(Sensacell tab){
 		this.tab = tab;
 		bd = new Detector(tab.getPApplet(), 255);
 	}
 
+	/**
+	 * Get the coordinates of the centroids of every detected blob on Sensacell.
+	 * @return
+	 * coordinates of blob's centroids
+	 */
 	public coord[] getCentroids(){
 		coord coordList[];
 		PImage img = arrayToPImage();
