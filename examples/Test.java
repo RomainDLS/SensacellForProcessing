@@ -16,8 +16,7 @@ public class Test extends PApplet{
 		size(tab.getWidth()*20,tab.getHeight()*20);
 		tab.fullDisplay();
 		Tools = new Utils(tab);
-		
-		Tools.DrawRectangle(0, 0, 10, 10, 0xFF00FF);
+		Tools.loadImage(loadImage("C:/Users/Romain/Desktop/smile.jpg"), 16, 16, 0, 0);
 		tab.Update();
 	}
 
